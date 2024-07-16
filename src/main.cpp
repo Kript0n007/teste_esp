@@ -13,7 +13,7 @@ const char* ssid = "KDM - QUINCHO";
 const char* password = "antonio2023";
 const char* versionUrl = "https://kript0n007.github.io/teste_esp/version.txt";
 const char* firmwareUrl = "https://kript0n007.github.io/teste_esp/firmware.bin";
-const char* currentVersion = "1.1"; // Versão atual do firmware
+const char* currentVersion = "1.2"; // Versão atual do firmware
 
 void setup() {
   Serial.begin(115200);
