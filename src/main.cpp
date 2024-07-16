@@ -38,7 +38,7 @@ void checkForUpdate() {
   WiFiClientSecure client;  // Use WiFiClientSecure para HTTPS
   HTTPClient http;
 
-  Serial.println("Checking for firmware version...");
+  Serial.println("Checking for firmware version lalallalalala...");
   client.setInsecure();  // Desabilitar verificação de certificado para simplicidade
   http.begin(client, versionUrl);
   int httpCode = http.GET();
