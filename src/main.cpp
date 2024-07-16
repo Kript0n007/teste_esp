@@ -23,7 +23,7 @@ void checkForUpdate() {
   WiFiClient client;
   HTTPClient http;
 
-  Serial.println("Checking for firmware update...");
+  Serial.println("atualizooooooooooooooooooooooooooooooooo...");
   http.begin(client, firmwareUrl);
   int httpCode = http.GET();
 
