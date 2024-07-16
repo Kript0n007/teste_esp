@@ -1,10 +1,19 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <Update.h>
+#include <Wire.h>
+#include <SPI.h>
+#include <FS.h>
+#include <SPIFFS.h>
 
-const char* ssid = "YOUR_SSID";
-const char* password = "YOUR_PASSWORD";
-const char* firmwareUrl = "https://<seu-usuario>.github.io/<seu-repositorio>/firmware.bin";
+void checkForUpdate();
+void performOTA();
+
+const char* ssid = "KDM - QUINCHO";
+const char* password = "antonio2023";
+const char* versionUrl = "https://kript0n007.github.io/teste_esp/version.txt";
+const char* firmwareUrl = "https://kript0n007.github.io/teste_esp/firmware.bin";
+const char* currentVersion = "1.0"; // Versão atual do firmware
 
 void setup() {
   Serial.begin(115200);
@@ -14,16 +23,51 @@ void setup() {
     delay(1000);
     Serial.println("Connecting to WiFi...");
   }
-  
-  // Call the function to check and update firmware
-  checkForUpdate();
+
+  Serial.println("Connected to WiFi");
+
+  if (!SPIFFS.begin(true)) {
+    Serial.println("An Error has occurred while mounting SPIFFS");
+    return;
+  }
+
+  checkForUpdate();  // Chama a função aqui
 }
 
 void checkForUpdate() {
-  WiFiClient client;
+  WiFiClientSecure client;  // Use WiFiClientSecure para HTTPS
   HTTPClient http;
 
-  Serial.println("atualizooooooooooooooooooooooooooooooooo...");
+  Serial.println("Checking for firmware version...");
+  client.setInsecure();  // Desabilitar verificação de certificado para simplicidade
+  http.begin(client, versionUrl);
+  int httpCode = http.GET();
+
+  if (httpCode == HTTP_CODE_OK) {
+    String newVersion = http.getString();
+
+    newVersion.trim(); // Remove whitespace
+
+    if (newVersion != currentVersion) {
+      Serial.printf("New firmware version available: %s\n", newVersion.c_str());
+      performOTA();
+    } else {
+      Serial.println("Firmware is up to date.");
+    }
+  } else {
+    Serial.printf("HTTP request failed. Error: %s\n", http.errorToString(httpCode).c_str());
+    Serial.printf("HTTP error code: %d\n", httpCode);
+  }
+  http.end();
+}
+
+void performOTA() {
+  WiFiClientSecure client;  // Use WiFiClientSecure para HTTPS
+  HTTPClient http;
+
+  Serial.println("Checking for firmware update...");
+  client.setInsecure();  // Desabilitar verificação de certificado para simplicidade
+  http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS); // Configura para seguir redirecionamentos
   http.begin(client, firmwareUrl);
   int httpCode = http.GET();
 
@@ -52,10 +96,11 @@ void checkForUpdate() {
     }
   } else {
     Serial.printf("HTTP request failed. Error: %s\n", http.errorToString(httpCode).c_str());
+    Serial.printf("HTTP error code: %d\n", httpCode);
   }
   http.end();
 }
 
 void loop() {
-  // Add any other code you need in the loop
+  // Adicione o código principal aqui
 }
