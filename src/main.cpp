@@ -65,7 +65,7 @@ void performOTA() {
   WiFiClientSecure client;  // Use WiFiClientSecure para HTTPS
   HTTPClient http;
 
-  Serial.println("Checking for firmware update...");
+  Serial.println("Checking for firmware updateeeeeeeeeeeeeee...");
   client.setInsecure();  // Desabilitar verificação de certificado para simplicidade
   http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS); // Configura para seguir redirecionamentos
   http.begin(client, firmwareUrl);
